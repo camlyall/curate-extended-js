@@ -38,7 +38,7 @@
 
     }
     function getPreservationConfigs() {
-        const url = `${window.location.origin}:6900/get_data`;
+        const url = `${window.location.origin}:6900/configs`;
         return fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -746,7 +746,7 @@
         }
     }
     function deletePreservationConfig(id) {
-        const url = `${window.location.origin}:6900/delete_data/${id}`;
+        const url = `${window.location.origin}:6900/configs/${id}`;
         return fetch(url, {
             method: "DELETE",
             headers: {
@@ -770,8 +770,31 @@
                 }
             })
     }
-    function setPreservationConfig(config) {
-        const url = `${window.location.origin}:6900/set_data`;
+    function updatePreservationConfig(id, config) {
+        const url = `${window.location.origin}:6900/configs/${id}`;
+        return fetch(url, {
+            method: "PUT",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(config)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                } else if (response.status == 200) {
+                    //save configs to session
+                    console.info("config updated successfully")
+                    return response.json();
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+    function addPreservationConfig(config) {
+        const url = `${window.location.origin}:6900/configs`;
         return fetch(url, {
             method: "POST",
             headers: {
